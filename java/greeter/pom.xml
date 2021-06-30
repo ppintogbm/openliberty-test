@@ -1,22 +1,17 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.gbm.samples</groupId>
-    <artifactId>sample</artifactId>
+    <artifactId>greeter</artifactId>
     <packaging>war</packaging>
     <version>1.0-SNAPSHOT</version>
-    
-    <parent>
-        <groupId>io.openliberty.tools</groupId>
-        <artifactId>liberty-maven-app-parent</artifactId>
-        <version>3.3.5-M1</version>
-    </parent>
     
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <maven.compiler.source>1.7</maven.compiler.source>
-        <maven.compiler.target>1.7</maven.compiler.target>
-        <packaging.type>minify,runnable</packaging.type>
+        <liberty.var.default.http.port>9080</liberty.var.default.http.port>
+        <liberty.var.default.https.port>9443</liberty.var.default.https.port>
+        <liberty.runtime.version>21.0.0.6</liberty.runtime.version>
+        <liberty.var.default.contextRoot>${project.artifactId}</liberty.var.default.contextRoot>
     </properties>
     
     <profiles>
@@ -29,12 +24,37 @@
     </profiles>
     
     <dependencies>
+
         <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
-            <version>3.1.0</version>
-            <scope>provided</scope>
+            <groupId>javax.persistence</groupId>
+            <artifactId>persistence-api</artifactId>
+            <version>1.0.2</version>
         </dependency>
+
+
+        <dependency>
+            <groupId>org.apache.derby</groupId>
+            <artifactId>derby</artifactId>
+            <version>10.14.2.0</version>
+        </dependency>
+
+
+        <dependency>
+            <groupId>javax.xml.bind</groupId>
+            <artifactId>jaxb-api</artifactId>
+            <version>2.4.0-b180830.0359</version>
+        </dependency>
+
+
+
+        
+       <dependency>
+           <groupId>jakarta.platform</groupId>
+           <artifactId>jakarta.jakartaee-web-api</artifactId>
+           <version>8.0.0</version>
+       </dependency>
+
+
         <dependency>
             <groupId>commons-httpclient</groupId>
             <artifactId>commons-httpclient</artifactId>
@@ -54,6 +74,14 @@
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
+                <configuration>
+                    <release>11</release>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
                 <version>3.0.0</version>
                 <configuration>
@@ -63,12 +91,12 @@
             <plugin>
                 <groupId>io.openliberty.tools</groupId>
                 <artifactId>liberty-maven-plugin</artifactId>
-                <version>3.3.5-M</version>
+                <version>3.3.5-M2</version>
                 <configuration>
                     <assemblyArtifact>
                         <groupId>io.openliberty</groupId>
                         <artifactId>openliberty-runtime</artifactId>
-                        <version>[20.0.0.8,)</version>
+                        <version></version>
                         <type>zip</type>
                     </assemblyArtifact>
                     <serverName>${project.artifactId}Server</serverName>
@@ -87,6 +115,32 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>3.2.0</version>
+                <executions>
+                    <execution>
+                        <id>copy</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>   
+                    </execution>
+                </executions>                     
+                <configuration>
+                    <artifactItems>
+                        <artifactItem>
+                            <groupId>org.apache.derby</groupId>
+                            <artifactId>derby</artifactId>
+                            <version>10.14.2.0</version>
+                            <type>jar</type>
+                            <overWrite>false</overWrite>
+                        </artifactItem>
+                    </artifactItems>
+                    <outputDirectory>${project.build.directory}/liberty/wlp/usr/shared/resources</outputDirectory>
+                </configuration>                             
             </plugin>
         </plugins>
     </build>
