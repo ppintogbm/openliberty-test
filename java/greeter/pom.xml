@@ -139,7 +139,7 @@
                             <overWrite>false</overWrite>
                         </artifactItem>
                     </artifactItems>
-                    <outputDirectory>${project.build.directory}/liberty/wlp/usr/shared/resources</outputDirectory>
+                    <outputDirectory>${project.build.directory}/liberty/wlp/usr/shared/resources/</outputDirectory>
                 </configuration>                             
             </plugin>
         </plugins>
